@@ -6,16 +6,23 @@ UWaterloo student, want to see what you [failed](http://ugradcalendar.uwaterloo.
 
 ### Dependencies
 
+####Python Dependencies:
+
 * [mechanize](http://wwwsearch.sourceforge.net/mechanize/): `pip install mechanize`
 * [BeautifulSoup](http://www.crummy.com/software/BeautifulSoup/): `pip install BeautifulSoup`
 * [argparse](https://code.google.com/p/argparse/): `pip install argparse`
 * [requests](http://docs.python-requests.org/en/latest/): `pip install requests`
 * [prettytable](http://code.google.com/p/prettytable/): `pip install prettytable`
-* [scrape-quest](https://github.com/0/scrape-quest): `git submodule update --init` (NB. It has its own dependencies.)
 
 Or install all dependencies at once with `pip install mechanize BeautifulSoup argparse requests prettytable`.
 
 `pip` should be run as root.
+
+####Submodule Dependencies:
+
+* [scrape-quest](https://github.com/0/scrape-quest): `git submodule update --init` (NB. It has its own dependencies.)
+
+This should be run in the repository folder.
 
 ### Configuration
 
