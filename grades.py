@@ -7,10 +7,17 @@ import prettytable
 from quest import scraper
 import sys
 import time
+import requests
+
+# Mandatory Mailgun setup
+youremail = 'X@X.com'
+mailgunapikey = 'key-XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX'
+sandboxdomain = 'sandboxXXXXX.mailgun.org'
 
 # Optional configuration. If not set, obtained elsewhere.
 username = None # 'a99bcdef'
 password = None # '!@#$%^&*'
+
 term = None # '2'
 
 POLL_INTERVAL = 60 * 60 # seconds
@@ -34,8 +41,7 @@ def obtain_grades(qs, term, bell, old_courses=None, old_grades=None):
 
 	# If supplied with old information, only print new information if it
 	# differs.
-	if (not old_courses or not old_grades or courses != old_courses or
-			grades != old_grades):
+	if (courses != old_courses or grades != old_grades):
 		event(bell)
 
 		pt = prettytable.PrettyTable(['Course', 'Grade'])
@@ -44,6 +50,15 @@ def obtain_grades(qs, term, bell, old_courses=None, old_grades=None):
 
 		pt.border = False
 		pt.header = False
+		if (old_courses != None and old_grades != None and args.email):
+			requests.post(
+			"https://api.mailgun.net/v2/" + sandboxdomain + "/messages",
+			auth=("api", mailgunapikey),
+			data={"from": "Quest Marks <quest@" + sandboxdomain + ">",
+			  "to": youremail,
+			  "subject": "New Quest Marks",
+			  "html": "<html>" + pt.get_html_string() + "</html>"})
+
 		print pt
 
 	return courses, grades
@@ -59,6 +74,8 @@ parser.add_argument('--continue-when-done', action='store_true',
 		help='continue polling even when all grades have become available')
 parser.add_argument('--bell', action='store_true',
 		help='print the ASCII bell character when something happens')
+parser.add_argument('--email', action='store_true',
+		help='send an email when a new mark is available')
 args = parser.parse_args()
 
 if args.username:
